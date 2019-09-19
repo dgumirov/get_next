@@ -6,11 +6,13 @@
 /*   By: tvincent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/14 12:53:20 by tvincent          #+#    #+#             */
-/*   Updated: 2019/09/15 15:21:55 by tvincent         ###   ########.fr       */
+/*   Updated: 2019/09/19 20:46:58 by tvincent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-static t_list	ft_line(t_list **list, int fd)
+#include "get_next_line.h"
+
+static t_list	*ft_line(t_list **list, int fd)
 {
 	t_list	*tmp;
 
@@ -22,9 +24,28 @@ static t_list	ft_line(t_list **list, int fd)
 		tmp = tmp->next;
 	}
 	tmp = ft_lstnew("\0", fd);
-	ft_lst_add(list, tmp);
+	ft_lstadd(list, tmp);
 	tmp = *list;
 	return (tmp);
+}
+
+char	*ft_strjoinch(char const *s1, char const s2)
+{
+	char	*str;
+	size_t	size;
+
+	if (s1)
+		size = (size_t)(ft_strlen((char*)s1));
+	else
+		return (NULL);
+	if (size > size + 2)
+		return (NULL);
+	if (!(str = (char *)malloc(sizeof(str) * size + 2)))
+		return (NULL);
+	if (s1)
+		str = ft_strcpy(str, (char*)s1);
+		str[size - 2] = s2;
+	return (str);
 }
 
 int			ft_copier(char **dst, char *src, char c)
@@ -34,7 +55,7 @@ int			ft_copier(char **dst, char *src, char c)
 	int		pos;
 
 	i = 0;
-	count = 0;
+	cnt = 0;
 	while (src[i])
 	{
 		if (src[i] == c)
@@ -55,7 +76,7 @@ int			ft_copier(char **dst, char *src, char c)
 
 int				get_next_line(int fd, char **line)
 {
-	char		buf[BUF_SIZE + 1];
+	char		buf[BUFF_SIZE + 1];
 	static 		t_list	*list;
 	t_list		*cur;
 	int		rd;
@@ -69,22 +90,22 @@ int				get_next_line(int fd, char **line)
 	while ((rd = read(fd, buf, BUFF_SIZE)))
 	{
 		buf[rd] = '\0';
-		if (!(curr->content = ft_strjoin(curr->content, buf)))
+		if (!(cur->content = ft_strjoin(cur->content, buf)))
 			return (-1);
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
-	if (rd < BUFF_SIZE && !ft_strlen(curr->content))
+	if (rd < BUFF_SIZE && !ft_strlen(cur->content))
 		return (0);
-	pos = ft_copier(line, curr->content, '\n');
-	if (pos < (int)ft_strlen(curr->content))
-		curr->content += (i + 1);
+	pos = ft_copier(line, cur->content, '\n');
+	if (pos < (int)ft_strlen(cur->content))
+		cur->content += (pos + 1);
 	else
-		ft_strclr(curr->content);
+		ft_strclr(cur->content);
 	return (1);
 
 }
-
+/*
 int		main(int argc, char **argv)
 {
 	int		fd;
@@ -104,3 +125,4 @@ int		main(int argc, char **argv)
 	if (argc == 2)
 		close(fd);
 }
+*/
