@@ -27,23 +27,80 @@ static t_list	ft_line(t_list **list, int fd)
 	return (tmp);
 }
 
-int				get_next_line(const int fd, char **line)
+int			ft_copier(char **dst, char *src, char c)
 {
-	char	b[BUF_SIZE + 1];
-	static t_list	*list;
-	t_list			*cur;
+	int		i;
+	int		cnt;
+	int		pos;
+
+	i = 0;
+	count = 0;
+	while (src[i])
+	{
+		if (src[i] == c)
+			break ;
+		i++;
+	}
+	pos = i;
+	if (!(*dst = ft_strnew(i)))
+		return (0);
+	while (src[cnt] && cnt < i)
+	{
+		if (!(*dst = ft_strjoinch(*dst, src[cnt])))
+			return (0);
+		cnt++;
+	}
+	return (pos);
+}
+
+int				get_next_line(int fd, char **line)
+{
+	char		buf[BUF_SIZE + 1];
+	static 		t_list	*list;
+	t_list		*cur;
+	int		rd;
+	int		pos;
 
 	if ((fd < 0 || read(fd, buf, 0) < 0))
 	   return (1);
 	cur = ft_line(&list, fd);
+	if (!(*line = ft_strnew(1)))
+		return (-1);
+	while ((rd = read(fd, buf, BUFF_SIZE)))
+	{
+		buf[rd] = '\0';
+		if (!(curr->content = ft_strjoin(curr->content, buf)))
+			return (-1);
+		if (ft_strchr(buf, '\n'))
+			break ;
+	}
+	if (rd < BUFF_SIZE && !ft_strlen(curr->content))
+		return (0);
+	pos = ft_copier(line, curr->content, '\n');
+	if (pos < (int)ft_strlen(curr->content))
+		curr->content += (i + 1);
+	else
+		ft_strclr(curr->content);
+	return (1);
 
 }
 
-int	main(int ar, char **av)
+int		main(int argc, char **argv)
 {
 	int		fd;
 	char	*line;
 
-	fd = open(av[1], O_RDNLY);
-	get_next_line(fd, &line);
+	if (argc == 1)
+		fd = 0;
+	else if (argc == 2)
+		fd = open(argv[1], O_RDONLY);
+	else
+		return (2);
+	while (get_next_line(fd, &line) == 1)
+	{
+		ft_putendl(line);
+		free(line);
+	}
+	if (argc == 2)
+		close(fd);
 }
