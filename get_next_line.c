@@ -6,7 +6,7 @@
 /*   By: tvincent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/14 12:53:20 by tvincent          #+#    #+#             */
-/*   Updated: 2019/09/19 20:46:58 by tvincent         ###   ########.fr       */
+/*   Updated: 2019/09/19 22:42:16 by tvincent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,18 @@ char	*ft_strjoinch(char const *s1, char const s2)
 	char	*str;
 	size_t	size;
 
-	if (s1)
+//	if (s1)
 		size = (size_t)(ft_strlen((char*)s1));
-	else
+//	else
+//		return (NULL);
+//	if (size > size + 2)
+//		return (NULL);
+	if (!(str = (char *)malloc(sizeof(str) * (size + 2))))
 		return (NULL);
-	if (size > size + 2)
-		return (NULL);
-	if (!(str = (char *)malloc(sizeof(str) * size + 2)))
-		return (NULL);
-	if (s1)
+//	if (s1)
 		str = ft_strcpy(str, (char*)s1);
-		str[size - 2] = s2;
+//	printf ("size = %zu\n", size);
+	str[size] = s2;
 	return (str);
 }
 
@@ -54,13 +55,12 @@ int			ft_copier(char **dst, char *src, char c)
 	int		cnt;
 	int		pos;
 
-	i = 0;
+	i = -1;
 	cnt = 0;
-	while (src[i])
+	while (src[++i])
 	{
 		if (src[i] == c)
 			break ;
-		i++;
 	}
 	pos = i;
 	if (!(*dst = ft_strnew(i)))
@@ -71,6 +71,7 @@ int			ft_copier(char **dst, char *src, char c)
 			return (0);
 		cnt++;
 	}
+//	printf("dst = %s\n", *dst);
 	return (pos);
 }
 
@@ -79,11 +80,11 @@ int				get_next_line(int fd, char **line)
 	char		buf[BUFF_SIZE + 1];
 	static 		t_list	*list;
 	t_list		*cur;
-	int		rd;
-	int		pos;
+	int			rd;
+	int			pos;
 
 	if ((fd < 0 || read(fd, buf, 0) < 0))
-	   return (1);
+	   return (-1);
 	cur = ft_line(&list, fd);
 	if (!(*line = ft_strnew(1)))
 		return (-1);
@@ -92,16 +93,18 @@ int				get_next_line(int fd, char **line)
 		buf[rd] = '\0';
 		if (!(cur->content = ft_strjoin(cur->content, buf)))
 			return (-1);
+//		printf ("content = %s\n", cur->content);
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
 	if (rd < BUFF_SIZE && !ft_strlen(cur->content))
 		return (0);
 	pos = ft_copier(line, cur->content, '\n');
+//	printf ("pos = %d\n", pos);
 	if (pos < (int)ft_strlen(cur->content))
 		cur->content += (pos + 1);
 	else
-		ft_strclr(cur->content);
+		ft_strclr(cur->content); 
 	return (1);
 
 }
@@ -119,6 +122,7 @@ int		main(int argc, char **argv)
 		return (2);
 	while (get_next_line(fd, &line) == 1)
 	{
+//		printf("str = %s\n", line);
 		ft_putendl(line);
 		free(line);
 	}
