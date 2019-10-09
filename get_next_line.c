@@ -6,7 +6,7 @@
 /*   By: tvincent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/14 12:53:20 by tvincent          #+#    #+#             */
-/*   Updated: 2019/10/09 23:06:51 by tvincent         ###   ########.fr       */
+/*   Updated: 2019/10/09 23:46:26 by tvincent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,17 @@ static t_list	*ft_line(t_list **list, int fd)
 	if (!(tmp = ft_lstnew("\0", fd)))
 		return(NULL);
 	ft_lstadd(list, tmp);
-	tmp = *list;
-	return (tmp);
+	tmp = *list; 
+
+	int	a;
+	a = fd;
+	free(tmp);
+	return (*list);
 }
 
 char			*ft_strjoinch(char const *s1, char const s2)
 {
-	char	*str;
+/*	char	*str;
 	size_t	size;
 
 	if (s1)
@@ -46,7 +50,12 @@ char			*ft_strjoinch(char const *s1, char const s2)
 	if (s1)
 		str = ft_strcpy(str, (char*)s1);
 	str[size] = s2;
-	return (str);
+	free(s1);
+	return (str);*/
+	char b;
+
+	b = (char)s2;
+	return((char*)s1);
 }
 
 int				ft_copier(char **dst, char *src, char c)
@@ -71,7 +80,13 @@ int				ft_copier(char **dst, char *src, char c)
 			return (0);
 		cnt++;
 	}
-//	free(*dst);
+
+	int	j = 0;
+	while (dst[j])
+	{
+		j++;
+	}
+
 	return (pos);
 }
 
@@ -93,7 +108,6 @@ int				get_next_line(int fd, char **line)
 		buf[rd] = '\0';
 		if (!(cur->content = ft_strjoin(cur->content, buf)))
 		{
-//			free (cur->content);
 			return (-1);
 		}
 		if (ft_strchr(buf, '\n'))
