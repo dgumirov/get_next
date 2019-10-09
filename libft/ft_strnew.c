@@ -6,7 +6,7 @@
 /*   By: tvincent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/06 20:53:24 by tvincent          #+#    #+#             */
-/*   Updated: 2019/09/15 17:40:58 by tvincent         ###   ########.fr       */
+/*   Updated: 2019/10/09 22:43:11 by tvincent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ char	*ft_strnew(size_t size)
 	if (size > size + 1)
 		return (NULL);
 	if (!(str = (char *)malloc(sizeof(char) * size + 1)))
+	{
+//		free(str);
 		return (NULL);
+	}
 	str[size] = '\0';
 	while (size)
 	{

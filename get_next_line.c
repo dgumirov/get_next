@@ -6,7 +6,7 @@
 /*   By: tvincent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/14 12:53:20 by tvincent          #+#    #+#             */
-/*   Updated: 2019/09/19 22:55:17 by tvincent         ###   ########.fr       */
+/*   Updated: 2019/10/09 23:06:51 by tvincent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static t_list	*ft_line(t_list **list, int fd)
 			return (tmp);
 		tmp = tmp->next;
 	}
-	tmp = ft_lstnew("\0", fd);
+	if (!(tmp = ft_lstnew("\0", fd)))
+		return(NULL);
 	ft_lstadd(list, tmp);
 	tmp = *list;
 	return (tmp);
@@ -70,6 +71,7 @@ int				ft_copier(char **dst, char *src, char c)
 			return (0);
 		cnt++;
 	}
+//	free(*dst);
 	return (pos);
 }
 
@@ -90,7 +92,10 @@ int				get_next_line(int fd, char **line)
 	{
 		buf[rd] = '\0';
 		if (!(cur->content = ft_strjoin(cur->content, buf)))
+		{
+//			free (cur->content);
 			return (-1);
+		}
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
@@ -123,5 +128,4 @@ int		main(int argc, char **argv)
 	}
 	if (argc == 2)
 		close(fd);
-}
-*/
+}*/
